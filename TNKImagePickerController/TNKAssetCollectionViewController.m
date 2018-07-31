@@ -106,13 +106,6 @@
 	}
 	
 	_fetchResult = [PHAsset fetchAssetsInAssetCollection:_assetCollection options:[self assetFetchOptions]];
-	
-	NSArray *assets = [_fetchResult objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, _fetchResult.count)]];
-	CGSize size = [self _layout].itemSize;
-	size.width *= self.traitCollection.displayScale;
-	size.height *= self.traitCollection.displayScale;
-	
-	[self.imageManager startCachingImagesForAssets:assets targetSize:size contentMode:PHImageContentModeAspectFill options:[TNKAssetImageView imageRequestOptions]];
 }
 
 

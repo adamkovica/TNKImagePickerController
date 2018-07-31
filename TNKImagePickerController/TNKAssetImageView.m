@@ -75,12 +75,14 @@ NS_ASSUME_NONNULL_BEGIN
         size.width *= self.traitCollection.displayScale;
         size.height *= self.traitCollection.displayScale;
 		
-		self.imageRequestID = [self.imageManager requestImageForAsset:_asset targetSize:size contentMode:PHImageContentModeAspectFill options:[self.class imageRequestOptions] resultHandler:^(UIImage *result, NSDictionary *info) {
-			NSAssert([NSThread isMainThread], @"isMainThread");
-			if (self.asset == asset && result != nil) {
-				self.image = result;
-			}
-		}];
+		@autoreleasepool {
+			self.imageRequestID = [[PHImageManager defaultManager] requestImageForAsset:_asset targetSize:size contentMode:PHImageContentModeAspectFit options:[self.class imageRequestOptions] resultHandler:^(UIImage *result, NSDictionary *info) {
+				NSAssert([NSThread isMainThread], @"isMainThread");
+				if (self.asset == asset && result != nil) {
+					self.image = result;
+				}
+			}];
+		}
 	}
 	
     _needsAssetReload = NO;
@@ -89,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cancelAssetImageRequest
 {
     if (self.imageRequestID != 0) {
-        [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
+        [self.imageManager cancelImageRequest:self.imageRequestID];
         self.imageRequestID = 0;
     }
 }
